@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace FakeServers
 {
@@ -13,6 +15,8 @@ namespace FakeServers
         private readonly UriBuilder uriBuilder;
         private CancellationTokenSource tokenSource;
         private readonly OrderedDictionary headers;
+        private Encoding encoding;
+        private byte[] content;
 
         public FakeHttpServer()
         {
@@ -79,6 +83,24 @@ namespace FakeServers
             headers.Clear();
         }
 
+        public void SetContent(string content, Encoding encoding = null)
+        {
+            this.encoding = encoding ?? System.Text.Encoding.Default;
+            this.content = this.encoding.GetBytes(content);
+        }
+
+        public void SetContent(byte[] content, Encoding encoding = null)
+        {
+            this.encoding = encoding;
+            this.content = content;
+        }
+
+        public void SetContent<T>(T content, Encoding encoding = null)
+        {
+            string json = JsonConvert.SerializeObject(content);
+            SetContent(json, encoding);
+        }
+
         public void Listen()
         {
             listener.Prefixes.Clear();
@@ -106,6 +128,14 @@ namespace FakeServers
                     {
                         context.Response.AppendHeader(header, value);
                     }
+                }
+                if (encoding != null)
+                {
+                    context.Response.ContentEncoding = encoding;
+                }
+                if (content != null)
+                {
+                    context.Response.OutputStream.Write(content, 0, content.Length);
                 }
                 context.Response.Close();
             }, tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Default);
