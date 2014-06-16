@@ -5,11 +5,11 @@ Simulate server interactions with pre-configured responses.
 Download using NuGet: [FakeServers](http://www.nuget.org/packages/FakeServers/)
 
 ## Overview
-Working with a remote API can be difficult to test. In some cases, hitting a remote server could cause undesired effects or even cost money. Worse, how does your code respond to different status codes?
+Working with a remote API can be difficult to test. In some cases, hitting a remote server could cause undesired effects or even cost money. Worse, how does your code respond to different status codes or errors?
 
 FakeServers aims at providing developers the ability to simulate interacting with an HTTP server. You can start up an actual HTTP server and specify what the response will be. You can override the status code, the headers and the content. The `FakeHttpServer` supports responding with strings, binary data or JSON out of the box.
 
-For example, this code tests retrieving a simple string:
+In the following example, we test retrieving a simple string:
 
     [TestClass]
     public class FakeHttpServerTester
@@ -50,3 +50,7 @@ For example, this code tests retrieving a simple string:
             }
         }
     }
+
+# Goals
+I would like to support additional HTTP response formats.
+I would like to eventually add support for other protocols: FTP, SMTP, AMQP, etc. 
