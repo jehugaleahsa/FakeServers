@@ -1,21 +1,16 @@
-﻿using System;
-using System.Reflection;
-using System.Resources;
+﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("FakeServers")]
+[assembly: AssemblyTitle("FakeServers.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("FakeServers")]
+[assembly: AssemblyProduct("FakeServers.Tests")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
-[assembly: Guid("d1ce5fae-d808-4e96-b978-348d8ea73494")]
+[assembly: Guid("74b92969-0a64-4ec1-b44b-f770245d2b64")]
 [assembly: AssemblyVersion("0.0.0.0")]
 [assembly: AssemblyFileVersion("0.0.0.0")]
-[assembly: NeutralResourcesLanguageAttribute("en-US")]
-[assembly: InternalsVisibleTo("FakeServers.Tests")]
-[assembly: CLSCompliant(true)]

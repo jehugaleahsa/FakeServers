@@ -13,16 +13,16 @@ namespace FakeServers
     {
         private readonly HttpListener listener;
         private readonly UriBuilder uriBuilder;
+        private readonly HttpHeaderCollection headers;
         private CancellationTokenSource tokenSource;
-        private readonly OrderedDictionary headers;
-        private Encoding encoding;
-        private byte[] content;
+        private IHttpResponder responder;
 
         public FakeHttpServer()
         {
             this.uriBuilder = new UriBuilder("http", "localhost", 8080);
             this.listener = new HttpListener();
-            this.headers = new OrderedDictionary();
+            this.headers = new HttpHeaderCollection();
+            this.responder = new HttpNullResponder();
         }
 
         ~FakeHttpServer()
@@ -51,54 +51,57 @@ namespace FakeServers
         public string Path
         {
             get { return uriBuilder.Path; }
-            set { uriBuilder.Path = value; }
+            set 
+            {
+                string path = value;
+                if (path != null)
+                {
+                    path = path.Replace("\\", "/");
+                    if (!path.EndsWith("/"))
+                    {
+                        path += "/";
+                    }
+                }
+                uriBuilder.Path = path; 
+            }
         }
 
         public HttpStatusCode StatusCode { get; set; }
 
         public string StatusDescription { get; set; }
 
-        public void AddHeader(string name, string value)
+        public HttpHeaderCollection Headers 
+        { 
+            get { return headers; } 
+        }
+
+        public void ReturnString(string content, Encoding encoding = null)
         {
-            List<string> values;
-            if (headers.Contains(name))
+            if (content == null)
             {
-                values = (List<string>)headers[name];
+                this.responder = new HttpNullResponder();
             }
             else
             {
-                values = new List<string>();
-                headers.Add(name, values);
+                this.responder = new HttpStringResponder(content) { Encoding = encoding };
             }
-            values.Add(value);
         }
 
-        public void RemoveHeader(string name)
+        public void ReturnBytes(byte[] content, Encoding encoding = null)
         {
-            headers.Remove(name);
+            if (content == null)
+            {
+                this.responder = new HttpNullResponder();
+            }
+            else
+            {
+                this.responder = new HttpByteArrayResponder(content) { Encoding = encoding };
+            }
         }
 
-        public void ClearHeaders()
+        public void ReturnJson<T>(T content, Encoding encoding = null)
         {
-            headers.Clear();
-        }
-
-        public void SetContent(string content, Encoding encoding = null)
-        {
-            this.encoding = encoding ?? System.Text.Encoding.Default;
-            this.content = this.encoding.GetBytes(content);
-        }
-
-        public void SetContent(byte[] content, Encoding encoding = null)
-        {
-            this.encoding = encoding;
-            this.content = content;
-        }
-
-        public void SetContent<T>(T content, Encoding encoding = null)
-        {
-            string json = JsonConvert.SerializeObject(content);
-            SetContent(json, encoding);
+            this.responder = new HttpJsonResponder<T>(content) { Encoding = encoding };
         }
 
         public void Listen()
@@ -117,25 +120,26 @@ namespace FakeServers
             Task handler = contextWaiter.ContinueWith(t =>
             {
                 HttpListenerContext context = t.Result;
+                context.Response.SendChunked = false;
                 context.Response.StatusCode = (int)StatusCode;
                 if (!String.IsNullOrWhiteSpace(StatusDescription))
                 {
                     context.Response.StatusDescription = StatusDescription;
                 }
-                foreach (string header in headers.Keys)
+                foreach (var headerGroup in headers)
                 {
-                    foreach (string value in (List<string>)headers[header])
+                    foreach (string value in headerGroup)
                     {
-                        context.Response.AppendHeader(header, value);
+                        context.Response.AppendHeader(headerGroup.Key, value);
                     }
                 }
-                if (encoding != null)
+                if (responder != null)
                 {
-                    context.Response.ContentEncoding = encoding;
-                }
-                if (content != null)
-                {
-                    context.Response.OutputStream.Write(content, 0, content.Length);
+                    responder.Write(context.Response);
+                    if (responder.Encoding != null)
+                    {
+                        context.Response.ContentEncoding = responder.Encoding;
+                    }
                 }
                 context.Response.Close();
             }, tokenSource.Token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Default);
