@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakeServers", "FakeServers.csproj", "{4916DD1A-47CC-46B4-BEEE-8410EBE25F5A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakeServers", "FakeServers\FakeServers.csproj", "{4916DD1A-47CC-46B4-BEEE-8410EBE25F5A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{410D469B-61FE-4CB0-A546-3D1C46C328C4}"
 	ProjectSection(SolutionItems) = preProject
@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{410D46
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakeServers.Tests", "..\FakeServers.Tests\FakeServers.Tests.csproj", "{5447B5A6-334B-4597-9022-B3442ED5EBCA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FakeServers.Tests", "FakeServers.Tests\FakeServers.Tests.csproj", "{5447B5A6-334B-4597-9022-B3442ED5EBCA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
