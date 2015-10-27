@@ -39,6 +39,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,6 +47,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extractors\StringBodyExtractor.cs" />
+    <Compile Include="Extractors\UrlEncodedBodyExtractor.cs" />
     <Compile Include="FakeHttpServer.cs" />
     <Compile Include="HttpByteArrayResponder.cs" />
     <Compile Include="HttpHeaderCollection.cs" />
@@ -53,6 +56,7 @@
     <Compile Include="HttpStringResponder.cs" />
     <Compile Include="IHttpResponder.cs" />
     <Compile Include="HttpJsonResponder.cs" />
+    <Compile Include="Extractors\IRequestBodyExtractor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+using FakeServers.Extractors;
 
 namespace FakeServers
 {
@@ -16,6 +14,7 @@ namespace FakeServers
         private readonly HttpHeaderCollection headers;
         private CancellationTokenSource tokenSource;
         private IHttpResponder responder;
+        private IRequestBodyExtractor extractor;
 
         public FakeHttpServer()
         {
@@ -104,6 +103,11 @@ namespace FakeServers
             this.responder = new HttpJsonResponder<T>(content) { Encoding = encoding };
         }
 
+        public void UseBodyExtractor(IRequestBodyExtractor extractor)
+        {
+            this.extractor = extractor;
+        }
+
         public void Listen()
         {
             listener.Prefixes.Clear();
@@ -120,6 +124,10 @@ namespace FakeServers
             Task handler = contextWaiter.ContinueWith(t =>
             {
                 HttpListenerContext context = t.Result;
+                if (extractor != null)
+                {
+                    extractor.Extract(context.Request);
+                }
                 context.Response.SendChunked = false;
                 context.Response.StatusCode = (int)StatusCode;
                 if (!String.IsNullOrWhiteSpace(StatusDescription))
