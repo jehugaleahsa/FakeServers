@@ -12,7 +12,7 @@ namespace FakeServers
 
         public HttpHeaderCollection()
         {
-            headers = new OrderedDictionary(StringComparer.OrdinalIgnoreCase);
+            headers = new OrderedDictionary(StringComparer.InvariantCultureIgnoreCase);
         }
 
         public void Add(string name, string value)

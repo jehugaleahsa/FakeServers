@@ -1,14 +1,15 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net;
 using System.Text;
 
-namespace FakeServers
+namespace FakeServers.Responders
 {
-    internal class HttpStringResponder : IHttpResponder
+    public class HttpStringResponder : IHttpResponder
     {
         public HttpStringResponder(string content)
         {
-            Content = content;
+            Content = content ?? String.Empty;
         }
 
         public string Content { get; private set; }

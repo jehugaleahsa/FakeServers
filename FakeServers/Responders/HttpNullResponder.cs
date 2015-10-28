@@ -1,10 +1,9 @@
-﻿using System.IO;
-using System.Net;
+﻿using System.Net;
 using System.Text;
 
-namespace FakeServers
+namespace FakeServers.Responders
 {
-    internal class HttpNullResponder : IHttpResponder
+    public class HttpNullResponder : IHttpResponder
     {
         public Encoding Encoding
         {

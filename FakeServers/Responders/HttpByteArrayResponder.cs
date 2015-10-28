@@ -1,13 +1,17 @@
-﻿using System.IO;
+﻿using System;
 using System.Net;
 using System.Text;
 
-namespace FakeServers
+namespace FakeServers.Responders
 {
-    internal class HttpByteArrayResponder : IHttpResponder
+    public class HttpByteArrayResponder : IHttpResponder
     {
         public HttpByteArrayResponder(byte[] content)
         {
+            if (content == null)
+            {
+                throw new ArgumentNullException("content");
+            }
             Content = content;
         }
 

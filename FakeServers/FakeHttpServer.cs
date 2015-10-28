@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using FakeServers.Extractors;
+using FakeServers.Responders;
 
 namespace FakeServers
 {
@@ -101,6 +102,11 @@ namespace FakeServers
         public void ReturnJson<T>(T content, Encoding encoding = null)
         {
             this.responder = new HttpJsonResponder<T>(content) { Encoding = encoding };
+        }
+
+        public void UseResponder(IHttpResponder responder)
+        {
+            this.responder = responder ?? new HttpNullResponder();
         }
 
         public void UseBodyExtractor(IRequestBodyExtractor extractor)

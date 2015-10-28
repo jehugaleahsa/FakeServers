@@ -3,9 +3,17 @@ using System.Net;
 using System.Text;
 using Newtonsoft.Json;
 
-namespace FakeServers
+namespace FakeServers.Responders
 {
-    internal class HttpJsonResponder<T> : IHttpResponder
+    public class HttpJsonResponder
+    {
+        public static HttpJsonResponder<T> Create<T>(T content)
+        {
+            return new HttpJsonResponder<T>(content);
+        }
+    }
+
+    public class HttpJsonResponder<T> : IHttpResponder
     {
         public HttpJsonResponder(T content)
         {

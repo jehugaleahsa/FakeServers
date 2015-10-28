@@ -1,9 +1,9 @@
 ﻿using System.Net;
 using System.Text;
 
-namespace FakeServers
+namespace FakeServers.Responders
 {
-    internal interface IHttpResponder
+    public interface IHttpResponder
     {
         Encoding Encoding { get; }
 
