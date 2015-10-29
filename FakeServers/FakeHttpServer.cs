@@ -34,6 +34,7 @@ namespace FakeServers
             this.listener = new HttpListener();
             this.headers = new HttpHeaderCollection();
             this.responder = new HttpNullResponder();
+            this.StatusCode = HttpStatusCode.OK;
         }
 
         ~FakeHttpServer()
