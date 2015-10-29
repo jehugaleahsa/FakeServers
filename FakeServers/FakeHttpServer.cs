@@ -30,6 +30,7 @@ namespace FakeServers
         public FakeHttpServer(Uri uri)
         {
             this.uriBuilder = new UriBuilder(uri);
+            uriBuilder.Path = getFixedPath(uriBuilder.Path);
             this.listener = new HttpListener();
             this.headers = new HttpHeaderCollection();
             this.responder = new HttpNullResponder();
@@ -61,19 +62,21 @@ namespace FakeServers
         public string Path
         {
             get { return uriBuilder.Path; }
-            set 
+            set { uriBuilder.Path = getFixedPath(value);  }
+        }
+
+        private static string getFixedPath(string path)
+        {
+            if (path == null)
             {
-                string path = value;
-                if (path != null)
-                {
-                    path = path.Replace("\\", "/");
-                    if (!path.EndsWith("/"))
-                    {
-                        path += "/";
-                    }
-                }
-                uriBuilder.Path = path; 
+                return "/";
             }
+            path = path.Replace("\\", "/");
+            if (!path.EndsWith("/"))
+            {
+                path += "/";
+            }
+            return path;
         }
 
         public HttpStatusCode StatusCode { get; set; }
