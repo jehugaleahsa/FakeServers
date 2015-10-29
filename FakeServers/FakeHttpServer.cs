@@ -18,8 +18,18 @@ namespace FakeServers
         private IRequestBodyExtractor extractor;
 
         public FakeHttpServer()
+            : this(new Uri("http://localhost:8080"))
+        {            
+        }
+
+        public FakeHttpServer(string uri)
+            : this(new Uri(uri))
         {
-            this.uriBuilder = new UriBuilder("http", "localhost", 8080);
+        }
+
+        public FakeHttpServer(Uri uri)
+        {
+            this.uriBuilder = new UriBuilder(uri);
             this.listener = new HttpListener();
             this.headers = new HttpHeaderCollection();
             this.responder = new HttpNullResponder();
