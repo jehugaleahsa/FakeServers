@@ -6,8 +6,6 @@ namespace FakeServers.Extractors
 {
     public class RequestExtractor : IRequestBodyExtractor
     {
-        private readonly IRequestBodyExtractor bodyExtractor;
-
         public RequestExtractor()
             : this(new EmptyBodyExtractor())
         {
@@ -19,8 +17,10 @@ namespace FakeServers.Extractors
             {
                 throw new ArgumentNullException("extractor");
             }
-            this.bodyExtractor = extractor;
+            this.BodyExtractor = extractor;
         }
+
+        public IRequestBodyExtractor BodyExtractor { get; private set; }
 
         public string[] AcceptTypes { get; private set; }
 
@@ -69,7 +69,7 @@ namespace FakeServers.Extractors
             this.Url = request.Url;
             this.UrlReferrer = request.UrlReferrer;
             this.UserAgent = request.UserAgent;
-            bodyExtractor.Extract(request);
+            BodyExtractor.Extract(request);
         }
     }
 }
