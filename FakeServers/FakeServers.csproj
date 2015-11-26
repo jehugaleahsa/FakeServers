@@ -51,8 +51,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extractors\EmptyBodyExtractor.cs" />
     <Compile Include="Extractors\MultiPartBodyExtractor.cs" />
     <Compile Include="Extractors\MultiPartFile.cs" />
+    <Compile Include="Extractors\RequestExtractor.cs" />
     <Compile Include="Extractors\StringBodyExtractor.cs" />
     <Compile Include="Extractors\UrlEncodedBodyExtractor.cs" />
     <Compile Include="FakeHttpServer.cs" />
