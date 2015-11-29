@@ -3,15 +3,18 @@
   <metadata>
     <id>$id$</id>
     <version>$version$</version>
-	<title>$title$</title>
+	  <title>$title$</title>
     <authors>$author$</authors>
     <owners>$author$</owners>
-	<projectUrl>https://github.com/jehugaleahsa/FakeServers</projectUrl>
+    <projectUrl>https://github.com/jehugaleahsa/FakeServers</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
     <copyright>Copyright 2014</copyright>
     <tags>
-	HTTP web server test testing unit integration request response
-	</tags>
+    HTTP web server test testing unit integration request response
+    </tags>
+    <dependencies>
+        <dependency id="Newtonsoft.Json" version="(5.0,)" />
+    </dependencies>
   </metadata>
 </package>
