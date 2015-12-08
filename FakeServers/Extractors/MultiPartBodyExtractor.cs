@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
@@ -57,7 +56,7 @@ namespace FakeServers.Extractors
                 return;
             }
             string boundary = contentTypeParameters["boundary"].First();
-            MultipartFormDataParser parser = new MultipartFormDataParser(request.InputStream, boundary);
+            MultipartFormDataParser parser = new MultipartFormDataParser(request.InputStream, boundary, request.ContentEncoding);
 
             this.files = parser.Files.Select(parsedFile => new MultiPartFile()
             {

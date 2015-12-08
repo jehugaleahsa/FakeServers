@@ -31,7 +31,7 @@ namespace FakeServers.Extractors
             {
                 return;
             }
-            using (StreamReader reader = new StreamReader(request.InputStream))
+            using (StreamReader reader = new StreamReader(request.InputStream, request.ContentEncoding))
             {
                 string content = reader.ReadToEnd();
                 Result = JsonConvert.DeserializeObject<T>(content, settings);

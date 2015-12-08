@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extractors\BinaryBodyExtractor.cs" />
     <Compile Include="Extractors\EmptyBodyExtractor.cs" />
     <Compile Include="Extractors\JsonBodyExtractor.cs" />
     <Compile Include="Extractors\MultiPartBodyExtractor.cs" />
