@@ -3,19 +3,20 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Net;
-using HttpMultipartParser;
+using System.Text;
+using FakeServers.MultiPart;
 
 namespace FakeServers.Extractors
 {
     public class MultiPartBodyExtractor : IRequestBodyExtractor
     {
         private NameValueCollection parameters;
-        private ILookup<string, MultiPartFile> files;
+        private MultiPartFileLookup files;
 
         public MultiPartBodyExtractor()
         {
             this.parameters = new NameValueCollection();
-            this.files = Enumerable.Empty<int>().ToLookup(p => (string)null, p => (MultiPartFile)null);
+            this.files = new MultiPartFileLookup();
         }
 
         public NameValueCollection Parameters
@@ -23,7 +24,7 @@ namespace FakeServers.Extractors
             get { return parameters; }
         }
 
-        public ILookup<string, MultiPartFile> Files
+        public MultiPartFileLookup Files
         {
             get { return files; }
         }
@@ -56,29 +57,88 @@ namespace FakeServers.Extractors
                 return;
             }
             string boundary = contentTypeParameters["boundary"].First();
-            MultipartFormDataParser parser = new MultipartFormDataParser(request.InputStream, boundary, request.ContentEncoding);
 
-            this.files = parser.Files.Select(parsedFile => new MultiPartFile()
+            using (Stream responseStream = request.InputStream)
             {
-                Name = parsedFile.Name,
-                FileName = parsedFile.FileName,
-                ContentType = parsedFile.ContentType,
-                Contents = copyData(parsedFile.Data)
-            }).ToLookup(f => f.Name, StringComparer.InvariantCultureIgnoreCase);
+                Encoding encoding = request.ContentEncoding;
+                StreamingMultiPartParser parser = new StreamingMultiPartParser(responseStream, encoding, boundary);
 
-            NameValueCollection collection = new NameValueCollection();
-            foreach (var parsedParameter in parser.Parameters)
-            {
-                collection.Add(parsedParameter.Name, parsedParameter.Data);
+                parser.SectionFound += (o, e) =>
+                {
+                    var data = getSectionData(e);
+                    if (data == null)
+                    {
+                        return;
+                    }
+                    if (String.IsNullOrWhiteSpace(data.FileName))
+                    {
+                        string value = encoding.GetString(data.Contents);
+                        this.parameters.Add(data.Name, value);
+                    }
+                    else
+                    {
+                        var file = new MultiPartFile()
+                        {
+                            Name = data.Name,
+                            FileName = data.FileName,
+                            ContentType = data.ContentType,
+                            Contents = data.Contents
+                        };
+                        this.files.Add(file.Name, file);
+                    }
+                };
+
+                parser.Parse().Wait();
             }
-            this.parameters = collection;
         }
 
-        private byte[] copyData(Stream source)
+        private static SectionData getSectionData(MultiPartSection section)
+        {
+            string contentDisposition = section.Headers["Content-Disposition"];
+            if (contentDisposition == null)
+            {
+                return null;
+            }
+            string[] parts = contentDisposition.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                .Select(p => p.Trim())
+                .ToArray();
+            var lookup = parts
+                .Select(p => p.Split(new char[] { '=' }, 2))
+                .Where(p => p.Length == 2)
+                .ToLookup(p => p[0], p => p[1].Trim(' ', '"'), StringComparer.CurrentCultureIgnoreCase);
+            SectionData data = new SectionData();
+            data.Name = getName(lookup["name"].FirstOrDefault());
+            data.FileName = getName(lookup["filename"].FirstOrDefault());
+            data.ContentType = section.Headers["Content-Type"];
+            data.Contents = copyData(section.Content);
+            return data;
+        }
+
+        private static string getName(string value)
+        {
+            if (String.IsNullOrWhiteSpace(value))
+            {
+                return null;
+            }
+            return value;
+        }
+
+        private static byte[] copyData(Stream source)
         {
             MemoryStream destination = new MemoryStream();
             source.CopyTo(destination);
             return destination.ToArray();
+        }
+
+        private class SectionData
+        {
+            public string Name { get; set; }
+
+            public string FileName { get; set; }
+
+            public string ContentType { get; set; }
+
+            public byte[] Contents { get; set; }
         }
     }
 }

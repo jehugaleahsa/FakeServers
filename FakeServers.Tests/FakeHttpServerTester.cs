@@ -117,7 +117,7 @@ namespace FakeServers.Tests
                 {
                     NameValueCollection collection = extractor.Parameters;
                     Assert.AreEqual("bob", collection.Get("name"), "Could not extract the name parameter.");
-                    var files = extractor.Files["file"];
+                    var files = extractor.Files.GetFiles("file");
                     Assert.AreEqual(1, files.Count(), "The wrong number of files were extracted.");
                     var file = files.First();
                     Assert.AreEqual("file", file.Name, "The name of the file part was not stored.");

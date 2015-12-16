@@ -32,10 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HttpMultipartParser, Version=1.1.5.0, Culture=neutral, PublicKeyToken=6d293681fa6c7a03, processorArchitecture=MSIL">
-      <HintPath>..\packages\HttpMultipartParser.2.0.1\lib\net40\HttpMultipartParser.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -55,11 +51,14 @@
     <Compile Include="Extractors\EmptyBodyExtractor.cs" />
     <Compile Include="Extractors\JsonBodyExtractor.cs" />
     <Compile Include="Extractors\MultiPartBodyExtractor.cs" />
-    <Compile Include="Extractors\MultiPartFile.cs" />
     <Compile Include="Extractors\RequestExtractor.cs" />
     <Compile Include="Extractors\StringBodyExtractor.cs" />
     <Compile Include="Extractors\UrlEncodedBodyExtractor.cs" />
     <Compile Include="FakeHttpServer.cs" />
+    <Compile Include="MultiPart\MultiPartFile.cs" />
+    <Compile Include="MultiPart\MultiPartFileLookup.cs" />
+    <Compile Include="MultiPart\MultiPartSection.cs" />
+    <Compile Include="MultiPart\StreamingMultiPartParser.cs" />
     <Compile Include="Responders\HttpByteArrayResponder.cs" />
     <Compile Include="HttpHeaderCollection.cs" />
     <Compile Include="Responders\HttpNullResponder.cs" />
