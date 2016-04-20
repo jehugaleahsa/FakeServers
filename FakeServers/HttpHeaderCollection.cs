@@ -52,7 +52,7 @@ namespace FakeServers
 
         public IEnumerable<string> this[string key]
         {
-            get { return (List<string>)headers[key]; }
+            get { return headers.Contains(key) ? (List<string>)headers[key] : new List<string>(); }
         }
 
         public IEnumerator<IGrouping<string, string>> GetEnumerator()
