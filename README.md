@@ -1,3 +1,5 @@
+> *Archived 2026-03-28*: This project is very old and will no longer be maintained.
+
 # Fake Servers
 
 Simulate server interactions with pre-configured responses.
